@@ -1,7 +1,7 @@
 (function (mt) {
     'use strict';
 
-    mt.MixTubeApp.factory('mtUserInteractionManager', function ($rootScope, $timeout) {
+    mt.MixTubeCommon.factory('mtUserInteractionManager', function ($rootScope, $timeout) {
         /**
          * @const
          * @type {number}

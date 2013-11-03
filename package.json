@@ -18,6 +18,8 @@
     "grunt-contrib-connect": "latest",
     "grunt-contrib-watch": "latest",
     "grunt-usemin": "latest",
-    "grunt-rev": "latest"
+    "grunt-rev": "latest",
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-concat": "latest"
   }
 }

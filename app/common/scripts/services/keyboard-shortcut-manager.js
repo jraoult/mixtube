@@ -1,7 +1,7 @@
 (function (mt) {
     'use strict';
 
-    mt.MixTubeApp.factory('mtKeyboardShortcutManager', function ($rootScope) {
+    mt.MixTubeCommon.factory('mtKeyboardShortcutManager', function ($rootScope) {
         /** @type {Object.<string, {combo: string|RegExp, callback: function}>} */
         var contexts = {};
         /** @type {Array.<string>} */
@@ -41,6 +41,18 @@
                 var bindings = contexts[context] = contexts.hasOwnProperty(context) ? contexts[context] : [];
                 bindings.push({combo: combo, callback: callback});
             },
+
+            /**
+             * Removes the given context and all its shortcuts
+             *
+             * @param {string} context the context name
+             */
+            clear: function (context) {
+                if (contexts.hasOwnProperty(context)) {
+                    delete contexts[context];
+                }
+            },
+
             /**
              * Unbinds the previous context shortcuts and binds the new ones.
              *

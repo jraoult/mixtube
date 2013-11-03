@@ -1,7 +1,7 @@
 (function (mt) {
     'use strict';
 
-    mt.MixTubeApp.factory('mtAlert', function ($rootScope, $q, $templateCache, $compile, $document, $animator, $timeout) {
+    mt.MixTubeCommon.factory('mtAlert', function ($rootScope, $q, $templateCache, $compile, $document, $animator, $timeout) {
         var alertContainer = mt.tools.querySelector($document, '.mt-alert-container');
         // need to trim the template because jQuery can not parse an HTML string that starts with a blank character
         var alertLinker;

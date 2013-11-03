@@ -6,15 +6,16 @@
     <title ng-bind="'MixTube ' + (queue.name ? '- ' + queue.name : '')">MixTube (Loading)</title>
 
     <!-- usemin must look for files in app and .tmp directory for compiled css -->
-    <!-- build:css({app,.tmp}) styles/app.css -->
+    <!-- build:css({app,.tmp}) styles/server.css -->
     <link rel="stylesheet" href="bower_components/reset-css/reset.css" type="text/css">
-    <link rel="stylesheet" href="styles/vendor/fontello/fontello.css" type="text/css">
-    <link rel="stylesheet" href="styles/css/main.css" type="text/css">
+    <link rel="stylesheet" href="server/styles/vendor/fontello/fontello.css" type="text/css">
+    <link rel="stylesheet" href="server/styles/css/main.css" type="text/css">
     <!-- endbuild -->
 
     <!-- Don't include Qbaka reporting while in dev to stop error reporting -->
-    <!--<script src="scripts/vendor/qbaka.js"></script>-->
+    <!--<script src="common/scripts/vendor/qbaka.js"></script>-->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js"></script>
+    <script src="//static.opentok.com/webrtc/v2.0/js/TB.min.js"></script>
 </head>
 <body mt-mousestart="mouseStarted()" mt-mousestop="mouseStopped()" debounce="300" ng-cloack>
 
@@ -153,6 +154,7 @@
                             Clear the current queue (remove all the tracks)
                         </div>
                     </a>
+                    <a ng-click="shareQueueButtonClicked()">Share the control this queue</a>
                 </div>
             </div>
         </div>
@@ -216,16 +218,16 @@
 
 <script type="text/ng-template" id="mtModalTemplate">
     <div class="mt-modal-container">
-        <div class="mt-modal-vc" ng-include="template"></div>
+        <div class="mt-modal-vc" ng-include="mtContentTemplateUrl"></div>
     </div>
 </script>
 <script type="text/ng-template" id="mtConfirmTemplate">
     <div class="mt-modal-window">
-        <p class="mt-message" ng-bind-html-unsafe="message"></p>
+        <p class="mt-message">{{message}}</p>
 
         <div class="mt-commands-container">
-            <button class="mt-confirm-button" type="button" ng-click="confirm()">{{ confirmLabel }}</button>
-            <a ng-click="close()">{{ cancelLabel }}</a>
+            <button class="mt-confirm-button" type="button" ng-click="mtClose()">Confirm</button>
+            <a ng-click="mtDismiss()">Cancel</a>
         </div>
     </div>
 </script>
@@ -243,31 +245,52 @@
            auto-select>
 </script>
 
+<script type="text/ng-template" id="mtSharingQueueModalTemplate">
+    <div class="mt-modal-window">
+        <p ng-show="pending">Initialising the session sharing. Please wait...</p>
+        <p ng-hide="pending">
+            You can now connect remotely to this queue<br>
+            Please <a ng-href="{{clientUrl}}" target="_blank">click on this link</a> or scan the QR code bellow
+        </p>
+        <p><img ng-src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&choe=UTF-8&chl={{clientUrl}}"
+                ng-if="!pending" width="200" height="200"></p>
+
+        <div class="mt-commands-container">
+            <button class="mt-confirm-button" type="button" ng-click="mtClose()">Ok</button>
+        </div>
+    </div>
+</script>
+
 <!-- build:js scripts/ext-dependencies.js -->
 <script src="bower_components/lodash/lodash.js"></script>
 <script src="bower_components/q/q.js"></script>
 <script src="bower_components/mousetrap/mousetrap.js"></script>
 <!-- endbuild -->
 
-<!-- build:js scripts/app.js -->
-<script src="scripts/bootstrap.js"></script>
-<script src="scripts/libs/mousetrap.regexpbinding.js"></script>
-<script src="scripts/libs/players-pool.js"></script>
-<script src="scripts/libs/tools.js"></script>
-<script src="scripts/libs/angular-extensions.js"></script>
-<script src="scripts/services/alert.js"></script>
-<script src="scripts/services/configuration.js"></script>
-<script src="scripts/services/keyboard-shortcut-manager.js"></script>
-<script src="scripts/services/logger-factory.js"></script>
-<script src="scripts/services/modal.js"></script>
-<script src="scripts/services/player-pool-provider.js"></script>
-<script src="scripts/services/queue-manager.js"></script>
-<script src="scripts/services/user-interaction-manager.js"></script>
-<script src="scripts/services/conductor.js"></script>
-<script src="scripts/services/youtube-client.js"></script>
-<script src="scripts/controllers.js"></script>
-<script src="scripts/directives-filters.js"></script>
-<script src="scripts/search-directive.js"></script>
+<!-- build:js scripts/server.js -->
+<script src="common/scripts/bootstrap.js"></script>
+<script src="common/scripts/libs/mousetrap.regexpbinding.js"></script>
+<script src="common/scripts/libs/tools.js"></script>
+<script src="common/scripts/libs/angular-extensions.js"></script>
+<script src="common/scripts/services/alert.js"></script>
+<script src="common/scripts/services/keyboard-shortcut-manager.js"></script>
+<script src="common/scripts/services/logger-factory.js"></script>
+<script src="common/scripts/services/modal.js"></script>
+<script src="common/scripts/services/user-interaction-manager.js"></script>
+<script src="common/scripts/services/configuration.js"></script>
+<script src="common/scripts/services/youtube-client.js"></script>
+<script src="common/scripts/services/rtc-facade.js"></script>
+<script src="common/scripts/directives-filters.js"></script>
+
+<script src="server/scripts/bootstrap.js"></script>
+<script src="server/scripts/controllers.js"></script>
+<script src="server/scripts/search-directive.js"></script>
+<script src="server/scripts/carousel-directive.js"></script>
+<script src="server/scripts/libs/players-pool.js"></script>
+<script src="server/scripts/services/player-pool-provider.js"></script>
+<script src="server/scripts/services/queue-manager.js"></script>
+<script src="server/scripts/services/conductor.js"></script>
+<script src="server/scripts/services/shared-queue-server-manager.js"></script>
 <!-- endbuild -->
 
 <script src="//www.youtube.com/iframe_api"></script>

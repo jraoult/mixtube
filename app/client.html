@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html ng-app="mtMixTubeClientApp">
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>Mixtube client</title>
+
+    <link rel="stylesheet" href="bower_components/reset-css/reset.css" type="text/css">
+    <link rel="stylesheet" href="client/styles/css/main.css" type="text/css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js"></script>
+    <script src="//static.opentok.com/webrtc/v2.0/js/TB.min.js"></script>
+</head>
+<body ng-controller="mtClientConnectionCtrl as rootCtrl" ng-cloak>
+
+<section class="mt-connection">
+    <form name="form" novalidate ng-hide="rootCtrl.joined">
+        <input ng-model="rootCtrl.sharedQueueId" placeholder="Shared queue id" required>
+        <input ng-model="rootCtrl.clientName" placeholder="Your name" required>
+        <button ng-click="rootCtrl.join()" ng-disabled="form.$invalid">Join</button>
+    </form>
+    <p ng-show="rootCtrl.joining">Joining, please wait...</p>
+    <p ng-show="rootCtrl.joined">You successfully joined the shared queue</p>
+    <p ng-show="rootCtrl.error">Error: Could not connect to the shared queue</p>
+</section>
+
+<!--<section ng-show="rootCtrl.joined" class="mt-search">-->
+<section class="mt-search">
+    <div ng-controller="mtClientSearchCtrl as searchCtrl">
+        <form name="form">
+            <input ng-model="searchCtrl.searchTerm" placeholder="Search for a video" required>
+            <button ng-click="searchCtrl.search()" ng-disabled="form.$invalid || searchCtrl.searchPending">Search
+            </button>
+        </form>
+        <section>
+            <p ng-show="searchCtrl.searchPending">Searching, please wait...</p>
+            <ul ng-hide="searchCtrl.searchPending" class="mt-results-list">
+                <li ng-repeat="result in searchCtrl.searchResults" class="mt-result-item">
+                    <div class="mt-result-column">
+                        <h3 class="mt-result-title">
+                            {{result.title}}
+                        </h3>
+                    </div>
+
+                    <div class="mt-result-column">
+                        <button ng-click="searchCtrl.appendToQueue(result)" class="mt-result-add-btn" title="Add to queue">
+                            +
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </section>
+    </div>
+</section>
+
+<!-- build:js scripts/ext-dependencies.js -->
+<script src="bower_components/lodash/lodash.js"></script>
+<script src="bower_components/q/q.js"></script>
+<script src="bower_components/mousetrap/mousetrap.js"></script>
+<!-- endbuild -->
+
+<!-- build:js scripts/client.js -->
+<script src="common/scripts/bootstrap.js"></script>
+<script src="common/scripts/libs/mousetrap.regexpbinding.js"></script>
+<script src="common/scripts/libs/tools.js"></script>
+<script src="common/scripts/libs/angular-extensions.js"></script>
+<script src="common/scripts/services/alert.js"></script>
+<script src="common/scripts/services/keyboard-shortcut-manager.js"></script>
+<script src="common/scripts/services/logger-factory.js"></script>
+<script src="common/scripts/services/modal.js"></script>
+<script src="common/scripts/services/user-interaction-manager.js"></script>
+<script src="common/scripts/services/rtc-facade.js"></script>
+<script src="common/scripts/services/configuration.js"></script>
+<script src="common/scripts/services/youtube-client.js"></script>
+<script src="common/scripts/directives-filters.js"></script>
+
+<script src="client/scripts/bootstrap.js"></script>
+<script src="client/scripts/controllers.js"></script>
+<script src="client/scripts/shared-queue-client-manager.js"></script>
+<!-- endbuild -->
+</body>
+</html>

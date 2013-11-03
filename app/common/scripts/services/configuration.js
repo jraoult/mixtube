@@ -1,7 +1,7 @@
 (function (mt) {
     'use strict';
 
-    mt.MixTubeApp.factory('mtConfiguration', function ($location) {
+    mt.MixTubeCommon.factory('mtConfiguration', function ($location) {
 
         var transitionStartTime = 'test.duration' in $location.search() ? parseInt($location.search()['test.duration'], 10) : -5000;
 

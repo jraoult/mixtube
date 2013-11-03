@@ -1,7 +1,7 @@
 (function (mt) {
     'use strict';
 
-    mt.MixTubeApp.run(function ($rootScope, $parse) {
+    mt.MixTubeCommon.run(function ($rootScope, $parse) {
 
         // a not very nice way to extend the angular Scope but we don't have access to it
         var Scope = Object.getPrototypeOf($rootScope);

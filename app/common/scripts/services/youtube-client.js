@@ -1,7 +1,7 @@
 (function (mt) {
     'use strict';
 
-    mt.MixTubeApp.factory('mtYoutubeClient', function ($http, $q, mtConfiguration, mtLoggerFactory) {
+    mt.MixTubeCommon.factory('mtYoutubeClient', function ($http, $q, mtConfiguration, mtLoggerFactory) {
 
         /**
          * @const

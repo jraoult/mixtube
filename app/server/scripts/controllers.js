@@ -52,7 +52,7 @@
         };
     });
 
-    mt.MixTubeApp.controller('mtQueueFrameCtrl', function ($scope, $rootScope, $q, mtQueueManager, mtConductor, mtYoutubeClient, mtUserInteractionManager, mtModal) {
+    mt.MixTubeApp.controller('mtQueueFrameCtrl', function ($scope, $rootScope, $q, $location, mtQueueManager, mtConductor, mtYoutubeClient, mtUserInteractionManager, mtModal, mtSharedQueueServerManager) {
 
         $scope.removeQueueEntryClicked = function (queueEntry) {
             mtQueueManager.removeEntry(queueEntry);
@@ -66,6 +66,21 @@
 
         $scope.openSearchButtonClicked = function () {
             $rootScope.$broadcast(mt.events.OpenSearchFrameRequest);
+        };
+
+        $scope.shareQueueButtonClicked = function () {
+
+            var modalScope = $rootScope.$new(true);
+            modalScope.pending = true;
+
+            // open the modal to give user response but with a waiting message
+            mtModal.open({templateUrl: 'mtSharingQueueModalTemplate', scope: modalScope});
+
+            // get the session. It might trigger long running request that's why we needed the waiting message above
+            mtSharedQueueServerManager.getSharedQueue().then(function (sharedQueueId) {
+                modalScope.pending = false;
+                modalScope.clientUrl = $location.protocol() + '://' + $location.host() + ':' + $location.port() + '/client.html?sqi=' + encodeURIComponent(sharedQueueId);
+            });
         };
 
         $scope.mouseEntered = function () {

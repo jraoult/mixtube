@@ -1,7 +1,7 @@
 (function (mt) {
     'use strict';
 
-    mt.MixTubeApp.factory('mtLoggerFactory', function ($log) {
+    mt.MixTubeCommon.factory('mtLoggerFactory', function ($log) {
 
         /**
          * @const

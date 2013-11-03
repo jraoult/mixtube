@@ -1,7 +1,7 @@
-(function (mt, undefined) {
+(function (mt) {
     'use strict';
 
-    mt.MixTubeApp = angular.module('mtMixTubeApp', [])
+    mt.MixTubeApp = angular.module('mtMixTubeApp', ['mtMixTubeCommon'])
         .config(function ($locationProvider) {
             $locationProvider.html5Mode(true);
         }).factory('$exceptionHandler', function ($log) {

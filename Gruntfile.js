@@ -33,16 +33,28 @@ module.exports = function (grunt) {
             }
         ],
 
-        // watches sass files to compile them a soon as they are modified by running the sass task
         watch: {
-            files: ['<%= mixtube.app %>/**/*.scss'],
-            tasks: ['sass']
+
+            // watches sass files to compile them a soon as they are modified by running the sass task
+            sass: {
+                files: ['<%= mixtube.app %>/**/*.scss'],
+                tasks: ['sass']
+            },
+
+            // reload the css in the browser when changed
+            livereload: {
+                files: ['.tmp/**/*.css'],
+                options: {
+                    livereload: true
+                }
+            }
         },
 
         // the web server for dev purposes
         connect: {
             server: {
                 options: {
+                    hostname: '*',
                     port: 8080,
                     base: ['.tmp', '<%= mixtube.app %>']
                 }
@@ -58,7 +70,7 @@ module.exports = function (grunt) {
                     post: {}
                 }
             },
-            html: '<%= mixtube.app %>/index.html'
+            html: '<%= mixtube.app %>/*.html'
         },
 
         // copies all the files that don't need any special processing
@@ -84,8 +96,8 @@ module.exports = function (grunt) {
 
         // replaces path in index.html by the concatenated versions
         usemin: {
-            css: ['<%= mixtube.dist %>/styles/app.css'],
-            html: ['<%= mixtube.dist %>/index.html']
+            css: ['<%= mixtube.dist %>/styles/*.css'],
+            html: ['<%= mixtube.dist %>/*.html']
         }
     });
 
