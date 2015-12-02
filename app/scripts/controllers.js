@@ -176,190 +176,64 @@ function RootCtrl($scope, $location, $timeout, $templateCache, keyboardShortcutM
 }
 
 // @ngInject
-function SearchResultsCtrl($scope, $timeout, youtubeClient, searchCtrlHelper) {
+function SearchResultsCtrl(searchCtrlHelper) {
 
   var searchResultsCtrl = this;
 
-  /**
-   * @const
-   * @type {number}
-   */
-  var INSTANT_SEARCH_DELAY = 500;
-
-  /** @type {number} */
-  var searchRequestCount = 0;
-  /** @type {?Promise} */
-  var instantSearchPromise = null;
-
-
-  // the following variables will be initialized by the initSearch function.
-
-  /**
-   * The user already executed one search. Used to hide the results pane until there is something to show.
-   *
-   * @type {boolean}
-   */
-  searchResultsCtrl.inSearch = null;
-  /**
-   * A list of results pages.
-   *
-   * @type {Object.<string, Array.<Array.<Video>>>}
-   */
-  searchResultsCtrl.results = null;
-  /** @type {Object.<string, boolean>} */
-  searchResultsCtrl.pending = null;
-  /** @type {Object.<string, boolean>} */
-  searchResultsCtrl.pendingMore = null;
-  /** @type {Object.<string, boolean>} */
-  searchResultsCtrl.error = null;
-  /** @type {Object.<string, boolean>} */
-  searchResultsCtrl.noneFound = null;
-  /** @type {Object.<string, string>} */
-  searchResultsCtrl.nextPageId = null;
-
-  searchResultsCtrl.getSearchTerm = getSearchTerm;
   searchResultsCtrl.shouldShowSearchResultPanel = shouldShowSearchResultPanel;
+  searchResultsCtrl.shouldShowSpinner = shouldShowSpinner;
+  searchResultsCtrl.shouldShowLoadingError = shouldShowLoadingError;
+  searchResultsCtrl.shouldShowNotFound = shouldShowNotFound;
+  searchResultsCtrl.shouldShowShowMore = shouldShowShowMore;
+  searchResultsCtrl.shouldShowShowMoreSpinner = shouldShowShowMoreSpinner;
   searchResultsCtrl.showMore = showMore;
 
-  activate();
+  Object.defineProperties(searchResultsCtrl, {
+    searchTerm: {
+      get: function() {
+        return searchCtrlHelper.searchTerm;
+      }
+    },
 
-  function getSearchTerm() {
-    return searchCtrlHelper.searchTerm;
-  }
+    results: {
+      get: function() {
+        return searchCtrlHelper.searchResultsData.results;
+      }
+    },
+
+    availableProviders: {
+      get: function() {
+        return {youtube: 'YouTube'};
+      }
+    }
+  });
 
   function shouldShowSearchResultPanel() {
-    return searchCtrlHelper.searchShown && searchResultsCtrl.inSearch;
+    return searchCtrlHelper.shouldShowSearchResultPanel();
   }
 
-  function initSearch() {
-    instantSearchPromise = null;
-    searchResultsCtrl.inSearch = false;
-    searchResultsCtrl.results = {youtube: [[]]};
-    searchResultsCtrl.pending = {youtube: false};
-    searchResultsCtrl.pendingMore = {youtube: false};
-    searchResultsCtrl.nextPageId = {youtube: null};
-    searchResultsCtrl.error = {youtube: false};
-    searchResultsCtrl.noneFound = {youtube: false};
+  function shouldShowSpinner(provider) {
+    return searchCtrlHelper.searchResultsData.pending[provider];
   }
 
-  function showMore(pId, nextPageId) {
-    if (pId === 'youtube') {
-      // clear any error message (case of retry after error)
-      searchResultsCtrl.error.youtube = false;
-      searchYoutube(searchCtrlHelper.searchTerm, nextPageId);
-    }
+  function shouldShowShowMore(provider) {
+    return !!searchCtrlHelper.searchResultsData.nextPageId[provider];
   }
 
-  /**
-   * @param {string} term
-   * @param {string=} nextPageId
-   * @returns {Promise}
-   */
-  function searchYoutube(term, nextPageId) {
-    var first = !nextPageId;
-
-    var pageSize,
-      startSearchRequestCount = searchRequestCount,
-      resultsLayoutInfo = searchCtrlHelper.resultsLayoutInfo;
-
-    if (first) {
-      pageSize = Math.max(11, resultsLayoutInfo.promotedCount + resultsLayoutInfo.regularCount * 3);
-
-      searchResultsCtrl.pending.youtube = true;
-
-      // reset the results list and the next page token since we are starting a new search
-      searchResultsCtrl.results.youtube = [];
-      searchResultsCtrl.nextPageId.youtube = null;
-    } else {
-      pageSize = Math.max(12, resultsLayoutInfo.regularCount * 4);
-
-      searchResultsCtrl.pendingMore.youtube = true;
-    }
-
-    // safety check on requested page size
-    var boundedPageSize = Math.min(pageSize, youtubeClient.maxResultsLimit);
-
-    return youtubeClient.searchVideosByQuery(
-      term,
-      {
-        pageSize: boundedPageSize,
-        pageId: nextPageId
-      },
-      function progressCb(results) {
-        if (searchRequestCount === startSearchRequestCount) {
-          if (results.videos.length) {
-            searchResultsCtrl.results.youtube.push(results.videos);
-            searchResultsCtrl.nextPageId.youtube = results.nextPageId;
-          } else {
-            searchResultsCtrl.noneFound.youtube = true;
-          }
-        }
-      })
-      .then(function doneCb() {
-        if (searchRequestCount === startSearchRequestCount) {
-          if (first) {
-            searchResultsCtrl.pending.youtube = false;
-          } else {
-            searchResultsCtrl.pendingMore.youtube = false;
-          }
-        }
-      })
-      .catch(function catchCb() {
-        if (searchRequestCount === startSearchRequestCount) {
-          searchResultsCtrl.error.youtube = true;
-          if (first) {
-            searchResultsCtrl.pending.youtube = false;
-            searchResultsCtrl.results.youtube = [];
-          } else {
-            searchResultsCtrl.pendingMore.youtube = false;
-          }
-        }
-      });
+  function shouldShowShowMoreSpinner(provider) {
+    return searchCtrlHelper.searchResultsData.pendingMore[provider];
   }
 
-  function activate() {
-    initSearch();
+  function shouldShowLoadingError(provider) {
+    return searchCtrlHelper.searchResultsData.error[provider];
+  }
 
-    // when the user types we automatically execute the search
-    $scope.$watch(function() {
-      return searchCtrlHelper.searchTerm;
-    }, function(newSearchTerm) {
-      if (newSearchTerm !== null) {
+  function shouldShowNotFound(provider) {
+    return searchCtrlHelper.searchResultsData.noneFound[provider];
+  }
 
-        // new inputs so we stop the previous request
-        $timeout.cancel(instantSearchPromise);
-
-        // as soon as the query changes clear messages
-        searchResultsCtrl.error.youtube = false;
-        searchResultsCtrl.noneFound.youtube = false;
-
-        // if the search has to be longer than two characters
-        if (newSearchTerm.length > 2) {
-          searchRequestCount++;
-
-          $timeout.cancel(instantSearchPromise);
-          instantSearchPromise = $timeout(function search() {
-            searchResultsCtrl.inSearch = true;
-
-            // we need to delay the actual search in order for the search panel show animation to work
-            $timeout(function() {
-              searchYoutube(newSearchTerm);
-            }, 0);
-          }, INSTANT_SEARCH_DELAY);
-        }
-      }
-    });
-
-    // ensures everything is initialized when the search is shown and stopped when it is hidden
-    $scope.$watch(function() {
-      return searchCtrlHelper.searchShown;
-    }, function(searchShown) {
-      if (searchShown) {
-        initSearch();
-      } else {
-        $timeout.cancel(instantSearchPromise);
-      }
-    });
+  function showMore(pId) {
+    searchCtrlHelper.showMore(pId, searchCtrlHelper.searchResultsData.nextPageId[pId]);
   }
 }
 

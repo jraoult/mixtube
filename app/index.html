@@ -214,12 +214,12 @@
          ng-show="searchResultsCtrl.shouldShowSearchResultPanel()"
          mt-interactive-chrome="searchResultsCtrl.shouldShowSearchResultPanel()">
       <div class="mt-search">
-        <div class="mt-search__provider" ng-repeat="(pId, pLabel) in {youtube: 'YouTube'}">
+        <div class="mt-search__provider" ng-repeat="(pId, pLabel) in searchResultsCtrl.availableProviders">
           <div class="mt-search__provider__header">
             <h3>Results from {{pLabel}}:</h3>
 
             <mt-spinner class="mt-search__provider__header__spinner"
-                        ng-show="searchResultsCtrl.pending[pId]"></mt-spinner>
+                        ng-show="searchResultsCtrl.shouldShowSpinner(pId)"></mt-spinner>
           </div>
 
           <div class="mt-results mt-js-results">
@@ -270,29 +270,27 @@
           </div>
 
 
-          <div class="mt-search__message mt-js-animation__fold" ng-if="searchResultsCtrl.error[pId]">
+          <div class="mt-search__message mt-js-animation__fold" ng-if="searchResultsCtrl.shouldShowLoadingError(pId)">
             <p class="mt-search__message__padding">
               Sorry, an error occured while searching for videos on {{pLabel}}. Please check your network
               connection or try again later.
             </p>
           </div>
 
-          <div class="mt-search__message mt-js-animation__fold"
-               ng-if="searchResultsCtrl.noneFound[pId]">
+          <div class="mt-search__message mt-js-animation__fold" ng-if="searchResultsCtrl.shouldShowNotFound(pId)">
             <p class="mt-search__message__padding">
-              Sorry, no video found on {{pLabel}} for "{{searchResultsCtrl.getSearchTerm()}}". Please try
+              Sorry, no video found on {{pLabel}} for "{{searchResultsCtrl.searchTerm}}". Please try
               with another
               title.
             </p>
           </div>
 
           <!-- show the button only when the first page of results is fetched -->
-          <div class="mt-search__show-more" ng-show="searchResultsCtrl.nextPageId[pId]">
-            <div class="mt-search__show-more__button"
-                       ng-click="searchResultsCtrl.showMore(pId, searchResultsCtrl.nextPageId[pId])">
+          <div class="mt-search__show-more" ng-show="searchResultsCtrl.shouldShowShowMore(pId)">
+            <div class="mt-search__show-more__button" ng-click="searchResultsCtrl.showMore(pId)">
               <div class="mt-search__show-more__button__label">
                 <div class="text">Show more</div>
-                <div class="loader" ng-show="searchResultsCtrl.pendingMore[pId]">
+                <div class="loader" ng-show="searchResultsCtrl.shouldShowShowMoreSpinner(pId)">
                   <mt-spinner class="mt-search__show-more__spinner"></mt-spinner>
                 </div>
               </div>
