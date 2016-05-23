@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-controller="RootCtrl as rootCtrl">
 <head>
-  <base href="/mixtube/">
+  <base href="/">
   <!--hopefully triggers GPU Rasterization on Chrome-->
   <meta name="viewport" content="width=device-width, minimum-scale=1.0,  initial-scale=1.0, user-scalable=yes">
 
@@ -16,26 +16,9 @@
   <meta property="og:site_name" content="MixTube.io">
   <meta property="og:image" content="http://www.mixtube.io/mixtube-logo-og.png">
 
-  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
-  <link rel="manifest" href="/manifest.json">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#FFFFFF">
-  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="230x230" href="/favicon-230x230.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <meta property="twitter:image" content="/twitter.png">
+  <!-- build:favicons -->
+  <!--the favicons related meta will be inserted here-->
+  <!-- endbuild -->
 
   <link href='https://fonts.gstatic.com' rel='preconnect' crossorigin>
   <link href='https://www.googleapis.com' rel='preconnect'>
@@ -98,12 +81,14 @@
 
     // make sure cached CSS don't get processed straight and then block first paint
     window.requestAnimationFrame(function() {
-      loadCSS('styles/main.css');
+      loadCSS('main.css');
       loadCSS('//fonts.googleapis.com/css?family=Open+Sans:300,600');
     });
   </script>
 
-  <style>[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak{display:none!important}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit;overflow:hidden}body,p,ul,li{margin:0;padding:0}h1,h2,h3{margin:0;font:inherit}a{color:inherit;text-decoration:inherit}html{height:100%;font:16px/24px "Open Sans",sans-serif;font-weight:300;color:rgba(255,255,255,.87)}body{height:100%;background-color:#0c0c0d;line-height:24px}body.idle{cursor:none}[role=button]{cursor:pointer;outline:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(255,255,255,0)}[role=button][aria-disabled=true]{cursor:none;pointer-events:none}@keyframes mt-spinner-rotation{to{transform:rotate(1turn)}}mt-smart-img{display:block;position:relative}mt-smart-img .mt-smart-img__image{background-repeat:no-repeat;background-position:center}mt-smart-img.fill-crop .mt-smart-img__image{position:absolute;top:0;bottom:0;right:0;left:0;background-size:cover}.mt-smart-img__loading-indicator-container{position:absolute;width:100%;top:0;bottom:0}mt-spinner{display:block}.mt-spinner__svg{display:block;fill:currentColor;animation:mt-spinner-rotation 500ms infinite linear}.mt-svg-icon{display:inline-block;height:32px;width:32px;fill:currentColor;stroke:currentColor}.mt-animation-enter-leave__fade.ng-enter,.mt-animation-enter-leave__fade.ng-leave{transition:opacity 200ms linear}.mt-animation-enter-leave__fade.ng-enter,.mt-animation-enter-leave__fade.ng-leave.ng-leave-active{opacity:0}.mt-animation-enter-leave__fade.ng-leave,.mt-animation-enter-leave__fade.ng-enter.ng-enter-active{opacity:1}.mt-backdrop{position:absolute;top:0;right:0;bottom:0;left:0;z-index:49;background-color:rgba(12,12,13,.85)}.mt-modal{position:absolute;top:0;right:0;bottom:0;left:0;z-index:50;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center}.mt-modal.ng-enter,.mt-modal.ng-leave{transition-property:opacity,transform;transition-duration:200ms;transition-timing-function:linear,cubic-bezier(.8,0,.2,1)}.mt-modal.ng-enter{opacity:0;transform:translateY(-25%)}.mt-modal.ng-enter.ng-enter-active{opacity:1;transform:translateY(0)}.mt-modal.ng-leave{opacity:1;transform:translateY(0)}.mt-modal.ng-leave.ng-leave-active{opacity:0;transform:translateY(-25%)}.mt-queue-loading__message{margin-bottom:24px}.mt-queue-loading__spinner{height:96px;color:#8fc346}</style>
+  <!-- build:cssInline -->
+  <!--the "above the fold" css will be inseretd here-->
+  <!-- endbuild -->
 </head>
 <body ng-class="{idle: rootCtrl.shouldIdleChrome()}">
 
@@ -134,21 +119,21 @@
         <div class="start">
           <h1 class="mt-header__app-title">
             <svg class="mt-svg-icon" role="img" title="MixTube">
-              <use xlink:href="images/sprite.svg#mt-logo"></use>
+              <use xlink:href="sprite.svg#mt-logo"></use>
             </svg>
           </h1>
         </div>
         <div class="center">
           <div class="mt-header__playback-button" ng-click="rootCtrl.togglePlayback()"
-                     ng-show="rootCtrl.shouldShowPlaybackControls()">
+               ng-show="rootCtrl.shouldShowPlaybackControls()">
             <div class="facet facet__animation-toggle" ng-class="{toggle: !rootCtrl.isPlaying()}">
               <svg class="mt-svg-icon" role="img" title="Play">
-                <use xlink:href="images/sprite.svg#mt-play-circle"></use>
+                <use xlink:href="sprite.svg#mt-play-circle"></use>
               </svg>
             </div>
             <div class="facet facet__animation-toggle" ng-class="{toggle: rootCtrl.isPlaying()}">
               <svg class="mt-svg-icon" role="img" title="Pause">
-                <use xlink:href="images/sprite.svg#mt-pause-circle"></use>
+                <use xlink:href="sprite.svg#mt-pause-circle"></use>
               </svg>
             </div>
           </div>
@@ -160,12 +145,12 @@
           <div class="mt-search-input__button" ng-click="rootCtrl.toggleSearch()">
             <div class="facet facet__animation-toggle" ng-class="{toggle: !rootCtrl.isSearchShown()}">
               <svg class="mt-svg-icon" role="img" title="Open search">
-                <use xlink:href="images/sprite.svg#ios-search"></use>
+                <use xlink:href="sprite.svg#ios-search"></use>
               </svg>
             </div>
             <div class="facet facet__animation-toggle" ng-class="{toggle: rootCtrl.isSearchShown()}">
               <svg class="mt-svg-icon" role="img" title="Close search">
-                <use xlink:href="images/sprite.svg#ios-close-empty"></use>
+                <use xlink:href="sprite.svg#ios-close-empty"></use>
               </svg>
             </div>
           </div>
@@ -194,7 +179,7 @@
                ng-class="{active: entry === rootCtrl.getRunningQueueEntry(), broken: entry.skippedAtRuntime}"
                mt-anchor="{{entry.id}}">
             <div class="mt-queue__entry__thumbnail" ng-click="queueCtrl.playQueueEntry($index)"
-                       ng-disabled="!rootCtrl.shouldShowPlaybackControls()">
+                 ng-disabled="!rootCtrl.shouldShowPlaybackControls()">
               <div ng-style="{'background-image': 'url({{entry.video.thumbnailUrl}})'}"
                    class="image"></div>
               <p class="mt-queue__entry__broken-message">Couldn't load this video</p>
@@ -212,9 +197,9 @@
 
               <div class="mt-queue__entry__commands">
                 <div class="mt-queue__entry__remove-button" ng-click="queueCtrl.removeQueueEntry(entry)"
-                           mt-click-active-class="ng-click-active">
+                     mt-click-active-class="ng-click-active">
                   <svg class="mt-svg-icon" role="img" title="Remove">
-                    <use xlink:href="images/sprite.svg#ios-close"></use>
+                    <use xlink:href="sprite.svg#ios-close"></use>
                   </svg>
                 </div>
               </div>
@@ -243,7 +228,7 @@
               <div class="mt-result" ng-repeat="searchResult in searchResultsPage"
                    ng-controller="SearchResultCtrl as searchResultCtrl">
                 <div class="mt-result__container"
-                           ng-click="searchResultCtrl.appendResultToQueue(searchResult)">
+                     ng-click="searchResultCtrl.appendResultToQueue(searchResult)">
 
                   <div class="mt-result__thumbnail">
                     <mt-smart-img source="{{searchResult.thumbnailUrl}}"
@@ -251,7 +236,7 @@
                       <div class="loading-indicator">
                         <span class="facet facet__animation-toggle" ng-hide="rootCtrl.isPlaying()">
                            <svg class="mt-svg-icon" role="img" title="Loading video thumbnail">
-                             <use xlink:href="images/sprite.svg#ios-videocam"></use>
+                             <use xlink:href="sprite.svg#ios-videocam"></use>
                            </svg>
                         </span>
                       </div>
@@ -304,7 +289,7 @@
           <!-- show the button only when the first page of results is fetched -->
           <div class="mt-search__show-more" ng-show="searchResultsCtrl.nextPageId[pId]">
             <div class="mt-search__show-more__button"
-                       ng-click="searchResultsCtrl.showMore(pId, searchResultsCtrl.nextPageId[pId])">
+                 ng-click="searchResultsCtrl.showMore(pId, searchResultsCtrl.nextPageId[pId])">
               <div class="mt-search__show-more__button__label">
                 <div class="text">Show more</div>
                 <div class="loader" ng-show="searchResultsCtrl.pendingMore[pId]">
@@ -319,7 +304,7 @@
   </div>
 </div>
 
-<script src="scripts/main.js"></script>
+<script src="main.js"></script>
 <script src="https://www.youtube.com/iframe_api" defer></script>
 
 </body>
